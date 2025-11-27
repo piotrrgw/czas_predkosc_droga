@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Czas / Prędkość / Odległość</title>
+    <style>
+        /* --- STYLE CSS z poprawionym polem czasu --- */
+        /* RGB 0:38:100 -> #002664 */
+        /* RGB 255:99:25 -> #FF6319 */
+        /* RGB 0:151:217 -> #0097D9 */
+        /* RGB 197:199:200 -> #C5C7C8 */
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .calculator-container {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 38, 100, 0.15);
+            max-width: 400px;
+            width: 100%;
+            border: 1px solid #C5C7C8;
+        }
+
+        h2 {
+            text-align: center;
+            color: #002664;
+            margin-top: 0;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #002664;
+            font-weight: bold;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #C5C7C8;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #0097D9;
+            box-shadow: 0 0 5px rgba(0, 151, 217, 0.5);
+        }
+
+        input:disabled {
+            background-color: #f2f2f2;
+            cursor: not-allowed;
+            color: #888;
+        }
+
+        /* --- NOWE STYLE DLA GRUPY PÓL CZASU --- */
+        .time-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .time-input-group input {
+            text-align: center;
+        }
+        
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        button {
+            flex-grow: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+
+        #calculateBtn {
+            background-color: #002664;
+            color: white;
+        }
+
+        #calculateBtn:hover {
+            background-color: #FF6319;
+        }
+
+        #resetBtn {
+            background-color: #C5C7C8;
+            color: #002664;
+        }
+        
+        #resetBtn:hover {
+            background-color: #aeb0b1;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6f5fc;
+            border: 1px solid #0097D9;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #002664;
+            min-height: 25px;
+        }
+        
+        .ai-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .ai-footer a {
+            color: #002664;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .ai-footer a:hover {
+            text-decoration: underline;
+            color: #FF6319;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator-container">
+        <h2>Kalkulator Czas / Prędkość / Odległość</h2>
+
+        <div class="form-group">
+            <label for="calculationType">Co chcesz obliczyć?</label>
+            <select id="calculationType">
+                <option value="distance">Odległość</option>
+                <option value="speed">Prędkość</option>
+                <option value="time">Czas</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="distance">Odległość (km)</label>
+            <input type="number" id="distance" placeholder="Wpisz odległość">
+        </div>
+
+        <div class="form-group">
+            <label for="speed">Prędkość (km/h)</label>
+            <input type="number" id="speed" placeholder="Wpisz prędkość">
+        </div>
+
+        <!-- ZMIENIONE POLE CZASU -->
+        <div class="form-group" id="time-group">
+            <label for="time_h">Czas</label>
+            <div class="time-input-group">
+                <input type="number" id="time_h" placeholder="Godziny" min="0">
+                <input type="number" id="time_m" placeholder="Minuty" min="0" max="59">
+            </div>
+        </div>
+
+        <div class="buttons-container">
+            <button id="calculateBtn">Oblicz</button>
+            <button id="resetBtn">Wyczyść</button>
+        </div>
+
+        <div id="result"></div>
+        
+        <footer class="ai-footer">
+            Stworzone z pomocą <a href="https://ai.google" target="_blank" rel="noopener noreferrer">AI od Google przez Piotr M 🚂</a>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const calculationType = document.getElementById('calculationType');
+            const distanceInput = document.getElementById('distance');
+            const speedInput = document.getElementById('speed');
+            // NOWE POLA CZASU
+            const timeHInput = document.getElementById('time_h');
+            const timeMInput = document.getElementById('time_m');
+            const timeGroup = document.getElementById('time-group');
+            
+            const calculateBtn = document.getElementById('calculateBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const resultDiv = document.getElementById('result');
+
+            function updateFormState() {
+                const selectedValue = calculationType.value;
+                
+                distanceInput.disabled = false;
+                speedInput.disabled = false;
+                timeHInput.disabled = false;
+                timeMInput.disabled = false;
+
+                if (selectedValue === 'distance') {
+                    distanceInput.disabled = true;
+                    distanceInput.value = '';
+                } else if (selectedValue === 'speed') {
+                    speedInput.disabled = true;
+                    speedInput.value = '';
+                } else if (selectedValue === 'time') {
+                    timeHInput.disabled = true;
+                    timeMInput.disabled = true;
+                    timeHInput.value = '';
+                    timeMInput.value = '';
+                }
+                resultDiv.textContent = '';
+            }
+            
+            function formatTime(decimalHours) {
+                if (isNaN(decimalHours) || decimalHours < 0) return "";
+                const hours = Math.floor(decimalHours);
+                const minutes = Math.round((decimalHours - hours) * 60);
+                
+                let parts = [];
+                if (hours > 0) parts.push(`${hours} godz.`);
+                if (minutes > 0) parts.push(`${minutes} min.`);
+                
+                return parts.join(' i ') || "0 min.";
+            }
+
+            function calculate() {
+                const type = calculationType.value;
+                const distance = parseFloat(distanceInput.value);
+                const speed = parseFloat(speedInput.value);
+                
+                // Pobierz wartości godzin i minut, zamień puste pola na 0
+                const hours = parseFloat(timeHInput.value) || 0;
+                const minutes = parseFloat(timeMInput.value) || 0;
+                // Przelicz na format dziesiętny dla obliczeń
+                const timeInHours = hours + (minutes / 60);
+
+                let resultText = '';
+
+                try {
+                    if (type === 'distance') {
+                        if (isNaN(speed) || isNaN(timeInHours)) throw new Error('Wprowadź poprawne wartości dla prędkości i czasu.');
+                        if (speed < 0 || hours < 0 || minutes < 0) throw new Error('Wartości nie mogą być ujemne.');
+                        const result = speed * timeInHours;
+                        resultText = `Odległość: <strong>${result.toFixed(2)} km</strong>`;
+                    } else if (type === 'speed') {
+                        if (isNaN(distance) || isNaN(timeInHours)) throw new Error('Wprowadź poprawne wartości dla odległości i czasu.');
+                        if (distance < 0 || hours < 0 || minutes < 0) throw new Error('Wartości nie mogą być ujemne.');
+                        if (timeInHours === 0) throw new Error('Czas nie może wynosić zero.');
+                        const result = distance / timeInHours;
+                        resultText = `Prędkość: <strong>${result.toFixed(2)} km/h</strong>`;
+                    } else if (type === 'time') {
+                        if (isNaN(distance) || isNaN(speed)) throw new Error('Wprowadź poprawne wartości dla odległości i prędkości.');
+                        if (distance < 0 || speed < 0) throw new Error('Wartości nie mogą być ujemne.');
+                        if (speed === 0) throw new Error('Prędkość nie może wynosić zero.');
+                        const resultInHours = distance / speed;
+                        resultText = `Czas podróży: <strong>${formatTime(resultInHours)}</strong>`;
+                    }
+                    resultDiv.innerHTML = resultText;
+                } catch (error) {
+                    resultDiv.innerHTML = `<span style="color: red;">Błąd: ${error.message}</span>`;
+                }
+            }
+
+            function resetForm() {
+                distanceInput.value = '';
+                speedInput.value = '';
+                timeHInput.value = '';
+                timeMInput.value = '';
+                resultDiv.innerHTML = '';
+                updateFormState();
+            }
+
+            calculationType.addEventListener('change', updateFormState);
+            calculateBtn.addEventListener('click', calculate);
+            resetBtn.addEventListener('click', resetForm);
+            
+            updateFormState();
+        });
+    </script>
+
+</body>
+</html>
