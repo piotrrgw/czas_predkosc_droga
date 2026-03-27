@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kalkulator do obliczania czasu, prędkości i odległości. Dostępny offline i przyjazny dla użytkownika.">
+    <meta name="theme-color" content="#002664">
     <title>Kalkulator Czas / Prędkość / Odległość</title>
+    
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="manifest" href="manifest.json">
+    
     <style>
-        /* --- STYLE CSS z poprawionym polem czasu --- */
-        /* RGB 0:38:100 -> #002664 */
-        /* RGB 255:99:25 -> #FF6319 */
-        /* RGB 0:151:217 -> #0097D9 */
-        /* RGB 197:199:200 -> #C5C7C8 */
-
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -20,6 +19,7 @@
             align-items: center;
             margin: 0;
             padding: 20px;
+            background-color: #f9f9f9;
         }
 
         .calculator-container {
@@ -72,7 +72,6 @@
             color: #888;
         }
 
-        /* --- NOWE STYLE DLA GRUPY PÓL CZASU --- */
         .time-input-group {
             display: flex;
             align-items: center;
@@ -140,6 +139,7 @@
             margin-top: 25px;
             font-size: 12px;
             color: #888;
+            line-height: 1.5;
         }
 
         .ai-footer a {
@@ -156,7 +156,7 @@
 </head>
 <body>
 
-    <div class="calculator-container">
+    <main class="calculator-container">
         <h2>Kalkulator Czas / Prędkość / Odległość</h2>
 
         <div class="form-group">
@@ -170,20 +170,19 @@
 
         <div class="form-group">
             <label for="distance">Odległość (km)</label>
-            <input type="number" id="distance" placeholder="Wpisz odległość">
+            <input type="number" id="distance" placeholder="Wpisz odległość" aria-label="Odległość w kilometrach">
         </div>
 
         <div class="form-group">
             <label for="speed">Prędkość (km/h)</label>
-            <input type="number" id="speed" placeholder="Wpisz prędkość">
+            <input type="number" id="speed" placeholder="Wpisz prędkość" aria-label="Prędkość w kilometrach na godzinę">
         </div>
 
-        <!-- ZMIENIONE POLE CZASU -->
         <div class="form-group" id="time-group">
-            <label for="time_h">Czas</label>
+            <label>Czas</label>
             <div class="time-input-group">
-                <input type="number" id="time_h" placeholder="Godziny" min="0">
-                <input type="number" id="time_m" placeholder="Minuty" min="0" max="59">
+                <input type="number" id="time_h" placeholder="Godziny" min="0" aria-label="Czas - godziny">
+                <input type="number" id="time_m" placeholder="Minuty" min="0" max="59" aria-label="Czas - minuty">
             </div>
         </div>
 
@@ -192,33 +191,29 @@
             <button id="resetBtn">Wyczyść</button>
         </div>
 
-        <div id="result"></div>
+        <div id="result" aria-live="polite"></div>
         
         <footer class="ai-footer">
-            Stworzone z pomocą <a href="https://ai.google" target="_blank" rel="noopener noreferrer">AI od Google</a> przez <a>Piotr M 🚂</a>
+            Współautorzy: Gemini oraz Piotr M 🚂<br>
+            Wersja aplikacji: v1.1
 
-               <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-W05T4L1HFD"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-W05T4L1HFD');
-</script>
+            <script async src="https://www.googletagmanager.com/gtag/js?id=G-W05T4L1HFD"></script>
+            <script>
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-W05T4L1HFD');
+            </script>
         </footer>
-
-    </div>
+    </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const calculationType = document.getElementById('calculationType');
             const distanceInput = document.getElementById('distance');
             const speedInput = document.getElementById('speed');
-            // NOWE POLA CZASU
             const timeHInput = document.getElementById('time_h');
             const timeMInput = document.getElementById('time_m');
-            const timeGroup = document.getElementById('time-group');
             
             const calculateBtn = document.getElementById('calculateBtn');
             const resetBtn = document.getElementById('resetBtn');
@@ -264,10 +259,8 @@
                 const distance = parseFloat(distanceInput.value);
                 const speed = parseFloat(speedInput.value);
                 
-                // Pobierz wartości godzin i minut, zamień puste pola na 0
                 const hours = parseFloat(timeHInput.value) || 0;
                 const minutes = parseFloat(timeMInput.value) || 0;
-                // Przelicz na format dziesiętny dla obliczeń
                 const timeInHours = hours + (minutes / 60);
 
                 let resultText = '';
@@ -312,6 +305,19 @@
             
             updateFormState();
         });
+
+        // Rejestracja Service Workera dla funkcji PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker zarejestrowany pomyślnie z zakresem: ', registration.scope);
+                    })
+                    .catch(err => {
+                        console.log('Rejestracja ServiceWorker nie powiodła się: ', err);
+                    });
+            });
+        }
     </script>
 
 </body>
