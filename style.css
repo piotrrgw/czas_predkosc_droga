@@ -1,0 +1,290 @@
+:root {
+    /* Zmienne dla trybu jasnego (Dzień) */
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-primary: #2c3e50;
+    --text-secondary: #64748b;
+    --accent-primary: #0056b3;
+    --accent-orange: #fb923c;
+    --result-bg: #e0f2fe; /* jasnoniebieski dla wyniku */
+    --border-color: #cbd5e1;
+    --header-bg: rgba(248, 250, 252, 0.85);
+    --input-bg: #ffffff;
+    --input-disabled: #f1f5f9;
+    --quick-action-bg: #e2e8f0;
+}
+
+body.dark-theme {
+    /* Zmienne dla trybu ciemnego (Noc) */
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --accent-primary: #38bdf8;
+    --accent-orange: #fb923c;
+    --result-bg: #115e59; /* ciemnomorski dla wyniku */
+    --border-color: #334155;
+    --header-bg: rgba(15, 23, 42, 0.85);
+    --input-bg: #0f172a;
+    --input-disabled: #334155;
+    --quick-action-bg: #334155;
+}
+
+/* Podstawowe ustawienia */
+html {
+    font-size: 16px; /* Baza do skalowania */
+}
+
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Dostępność - Nawigacja klawiaturą */
+*:focus-visible {
+    outline: 3px solid var(--accent-orange) !important;
+    outline-offset: 2px !important;
+}
+
+/* Sticky Header (Glassmorphism) */
+.sticky-header {
+    position: sticky;
+    top: 0;
+    background-color: var(--header-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 100;
+    padding: 10px 20px;
+}
+
+.header-content {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-content h1 {
+    font-size: 1.2rem;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.header-tools {
+    display: flex;
+    gap: 8px;
+}
+
+.icon-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.icon-btn:hover {
+    background-color: var(--border-color);
+}
+
+.icon-btn .material-symbols-outlined {
+    font-size: 24px;
+}
+
+/* Layout i Karty */
+.calculator-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: 24px 16px;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-color);
+}
+
+.card h2 {
+    text-align: center;
+    margin-top: 0;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+}
+
+/* Formularze i Inputy */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+input[type="number"], select {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    min-height: 44px; /* Touch target */
+    transition: border-color 0.2s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+}
+
+input:disabled {
+    background-color: var(--input-disabled);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    border-color: var(--border-color);
+}
+
+.time-input-group {
+    display: flex;
+    gap: 12px;
+}
+
+.time-input-group input {
+    text-align: center;
+}
+
+/* Quick Actions */
+.quick-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.quick-btn {
+    flex: 1;
+    background-color: var(--quick-action-bg);
+    color: var(--text-primary);
+    border: none;
+    border-radius: 8px;
+    min-height: 44px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.quick-btn:hover {
+    background-color: var(--accent-primary);
+    color: #ffffff;
+}
+
+/* Przyciski Główne */
+.buttons-container {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+button {
+    font-family: inherit;
+}
+
+.primary-btn, .secondary-btn {
+    flex: 1;
+    min-height: 44px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.primary-btn:active, .secondary-btn:active {
+    transform: translateY(2px);
+}
+
+.primary-btn {
+    background-color: var(--accent-primary);
+    color: #ffffff;
+}
+
+.primary-btn:hover {
+    filter: brightness(1.1);
+}
+
+.secondary-btn {
+    background-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.secondary-btn:hover {
+    filter: brightness(0.9);
+}
+
+/* Wynik (Result Box) */
+.result-box {
+    margin-top: 24px;
+    padding: 20px;
+    background-color: var(--result-bg);
+    border-radius: 12px;
+    text-align: center;
+    color: var(--text-primary);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.result-box strong {
+    display: block;
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin-top: 8px;
+    line-height: 1.1;
+}
+
+.result-box .error-text {
+    color: #ef4444; /* Jasnoczerwony bezpieczny na różnych tłach */
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* Stopka */
+.app-footer {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--bg-color);
+}
+
+.app-footer p {
+    margin: 4px 0;
+}

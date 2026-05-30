@@ -4,321 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Kalkulator do obliczania czasu, prędkości i odległości. Dostępny offline i przyjazny dla użytkownika.">
-    <meta name="theme-color" content="#002664">
+    <meta name="theme-color" content="#f8fafc" id="meta-theme-color">
     <title>Kalkulator Czas / Prędkość / Odległość</title>
     
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="manifest" href="manifest.json">
     
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
-
-        .calculator-container {
-            background-color: #ffffff;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 38, 100, 0.15);
-            max-width: 400px;
-            width: 100%;
-            border: 1px solid #C5C7C8;
-        }
-
-        h2 {
-            text-align: center;
-            color: #002664;
-            margin-top: 0;
-            font-size: 24px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #002664;
-            font-weight: bold;
-        }
-
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #C5C7C8;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: #0097D9;
-            box-shadow: 0 0 5px rgba(0, 151, 217, 0.5);
-        }
-
-        input:disabled {
-            background-color: #f2f2f2;
-            cursor: not-allowed;
-            color: #888;
-        }
-
-        .time-input-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .time-input-group input {
-            text-align: center;
-        }
-        
-        .buttons-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        button {
-            flex-grow: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.1s;
-        }
-        
-        button:active {
-            transform: translateY(1px);
-        }
-
-        #calculateBtn {
-            background-color: #002664;
-            color: white;
-        }
-
-        #calculateBtn:hover {
-            background-color: #FF6319;
-        }
-
-        #resetBtn {
-            background-color: #C5C7C8;
-            color: #002664;
-        }
-        
-        #resetBtn:hover {
-            background-color: #aeb0b1;
-        }
-
-        #result {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #e6f5fc;
-            border: 1px solid #0097D9;
-            border-radius: 5px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            color: #002664;
-            min-height: 25px;
-        }
-        
-        .ai-footer {
-            text-align: center;
-            margin-top: 25px;
-            font-size: 12px;
-            color: #888;
-            line-height: 1.5;
-        }
-
-        .ai-footer a {
-            color: #002664;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .ai-footer a:hover {
-            text-decoration: underline;
-            color: #FF6319;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="light-theme">
 
-    <main class="calculator-container">
-        <h2>Kalkulator Czas / Prędkość / Odległość</h2>
-
-        <div class="form-group">
-            <label for="calculationType">Co chcesz obliczyć?</label>
-            <select id="calculationType">
-                <option value="distance">Odległość</option>
-                <option value="speed">Prędkość</option>
-                <option value="time">Czas</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="distance">Odległość (km)</label>
-            <input type="number" id="distance" placeholder="Wpisz odległość" aria-label="Odległość w kilometrach">
-        </div>
-
-        <div class="form-group">
-            <label for="speed">Prędkość (km/h)</label>
-            <input type="number" id="speed" placeholder="Wpisz prędkość" aria-label="Prędkość w kilometrach na godzinę">
-        </div>
-
-        <div class="form-group" id="time-group">
-            <label>Czas</label>
-            <div class="time-input-group">
-                <input type="number" id="time_h" placeholder="Godziny" min="0" aria-label="Czas - godziny">
-                <input type="number" id="time_m" placeholder="Minuty" min="0" max="59" aria-label="Czas - minuty">
+    <header class="sticky-header">
+        <div class="header-content">
+            <h1>Kalkulator CPD</h1>
+            <div class="header-tools">
+                <button id="btn-font-decrease" class="icon-btn" aria-label="Zmniejsz rozmiar tekstu">
+                    <span class="material-symbols-outlined">text_decrease</span>
+                </button>
+                <button id="btn-font-increase" class="icon-btn" aria-label="Zwiększ rozmiar tekstu">
+                    <span class="material-symbols-outlined">text_increase</span>
+                </button>
+                <button id="btn-theme-toggle" class="icon-btn" aria-label="Przełącz motyw dzień/noc">
+                    <span class="material-symbols-outlined" id="theme-icon">dark_mode</span>
+                </button>
             </div>
         </div>
+    </header>
 
-        <div class="buttons-container">
-            <button id="calculateBtn">Oblicz</button>
-            <button id="resetBtn">Wyczyść</button>
-        </div>
+    <main class="calculator-container">
+        <section class="card">
+            <h2>Kalkulator Czas / Prędkość / Odległość</h2>
 
-        <div id="result" aria-live="polite"></div>
-        
-        <footer class="ai-footer">
-            Współautorzy: Gemini oraz Piotr M 🚂<br>
-            Wersja aplikacji: v1.1
+            <div class="form-group">
+                <label for="calculationType">Co chcesz obliczyć?</label>
+                <select id="calculationType">
+                    <option value="distance">Odległość</option>
+                    <option value="speed">Prędkość</option>
+                    <option value="time">Czas</option>
+                </select>
+            </div>
 
-            <script async src="https://www.googletagmanager.com/gtag/js?id=G-W05T4L1HFD"></script>
-            <script>
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-W05T4L1HFD');
-            </script>
-        </footer>
+            <div class="form-group">
+                <label for="distance">Odległość (km)</label>
+                <input type="number" id="distance" placeholder="Wpisz odległość" aria-label="Odległość w kilometrach">
+            </div>
+
+            <div class="form-group">
+                <label for="speed">Prędkość (km/h)</label>
+                <input type="number" id="speed" placeholder="Wpisz prędkość" aria-label="Prędkość w kilometrach na godzinę">
+            </div>
+
+            <div class="form-group" id="time-group">
+                <label>Czas</label>
+                <div class="time-input-group">
+                    <input type="number" id="time_h" placeholder="Godziny" min="0" aria-label="Czas - godziny">
+                    <input type="number" id="time_m" placeholder="Minuty" min="0" max="59" aria-label="Czas - minuty">
+                </div>
+                <div class="quick-actions">
+                    <button type="button" class="quick-btn" data-add-h="1" data-add-m="0" aria-label="Dodaj 1 godzinę">+1h</button>
+                    <button type="button" class="quick-btn" data-add-h="0" data-add-m="15" aria-label="Dodaj 15 minut">+15m</button>
+                    <button type="button" class="quick-btn" data-add-h="0" data-add-m="30" aria-label="Dodaj 30 minut">+30m</button>
+                </div>
+            </div>
+
+            <div class="buttons-container">
+                <button id="calculateBtn" class="primary-btn">Oblicz</button>
+                <button id="resetBtn" class="secondary-btn">Wyczyść</button>
+            </div>
+
+            <div id="result" class="result-box" aria-live="polite"></div>
+        </section>
     </main>
+    
+    <footer class="app-footer">
+        <p>Współautorzy: Gemini, Piotr M 🚂, Thundo</p>
+        <p>Wersja aplikacji: v1.2</p>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const calculationType = document.getElementById('calculationType');
-            const distanceInput = document.getElementById('distance');
-            const speedInput = document.getElementById('speed');
-            const timeHInput = document.getElementById('time_h');
-            const timeMInput = document.getElementById('time_m');
-            
-            const calculateBtn = document.getElementById('calculateBtn');
-            const resetBtn = document.getElementById('resetBtn');
-            const resultDiv = document.getElementById('result');
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-W05T4L1HFD"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-W05T4L1HFD');
+        </script>
+    </footer>
 
-            function updateFormState() {
-                const selectedValue = calculationType.value;
-                
-                distanceInput.disabled = false;
-                speedInput.disabled = false;
-                timeHInput.disabled = false;
-                timeMInput.disabled = false;
-
-                if (selectedValue === 'distance') {
-                    distanceInput.disabled = true;
-                    distanceInput.value = '';
-                } else if (selectedValue === 'speed') {
-                    speedInput.disabled = true;
-                    speedInput.value = '';
-                } else if (selectedValue === 'time') {
-                    timeHInput.disabled = true;
-                    timeMInput.disabled = true;
-                    timeHInput.value = '';
-                    timeMInput.value = '';
-                }
-                resultDiv.textContent = '';
-            }
-            
-            function formatTime(decimalHours) {
-                if (isNaN(decimalHours) || decimalHours < 0) return "";
-                const hours = Math.floor(decimalHours);
-                const minutes = Math.round((decimalHours - hours) * 60);
-                
-                let parts = [];
-                if (hours > 0) parts.push(`${hours} godz.`);
-                if (minutes > 0) parts.push(`${minutes} min.`);
-                
-                return parts.join(' i ') || "0 min.";
-            }
-
-            function calculate() {
-                const type = calculationType.value;
-                const distance = parseFloat(distanceInput.value);
-                const speed = parseFloat(speedInput.value);
-                
-                const hours = parseFloat(timeHInput.value) || 0;
-                const minutes = parseFloat(timeMInput.value) || 0;
-                const timeInHours = hours + (minutes / 60);
-
-                let resultText = '';
-
-                try {
-                    if (type === 'distance') {
-                        if (isNaN(speed) || isNaN(timeInHours)) throw new Error('Wprowadź poprawne wartości dla prędkości i czasu.');
-                        if (speed < 0 || hours < 0 || minutes < 0) throw new Error('Wartości nie mogą być ujemne.');
-                        const result = speed * timeInHours;
-                        resultText = `Odległość: <strong>${result.toFixed(2)} km</strong>`;
-                    } else if (type === 'speed') {
-                        if (isNaN(distance) || isNaN(timeInHours)) throw new Error('Wprowadź poprawne wartości dla odległości i czasu.');
-                        if (distance < 0 || hours < 0 || minutes < 0) throw new Error('Wartości nie mogą być ujemne.');
-                        if (timeInHours === 0) throw new Error('Czas nie może wynosić zero.');
-                        const result = distance / timeInHours;
-                        resultText = `Prędkość: <strong>${result.toFixed(2)} km/h</strong>`;
-                    } else if (type === 'time') {
-                        if (isNaN(distance) || isNaN(speed)) throw new Error('Wprowadź poprawne wartości dla odległości i prędkości.');
-                        if (distance < 0 || speed < 0) throw new Error('Wartości nie mogą być ujemne.');
-                        if (speed === 0) throw new Error('Prędkość nie może wynosić zero.');
-                        const resultInHours = distance / speed;
-                        resultText = `Czas podróży: <strong>${formatTime(resultInHours)}</strong>`;
-                    }
-                    resultDiv.innerHTML = resultText;
-                } catch (error) {
-                    resultDiv.innerHTML = `<span style="color: red;">Błąd: ${error.message}</span>`;
-                }
-            }
-
-            function resetForm() {
-                distanceInput.value = '';
-                speedInput.value = '';
-                timeHInput.value = '';
-                timeMInput.value = '';
-                resultDiv.innerHTML = '';
-                updateFormState();
-            }
-
-            calculationType.addEventListener('change', updateFormState);
-            calculateBtn.addEventListener('click', calculate);
-            resetBtn.addEventListener('click', resetForm);
-            
-            updateFormState();
-        });
-
-        // Rejestracja Service Workera dla funkcji PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker zarejestrowany pomyślnie z zakresem: ', registration.scope);
-                    })
-                    .catch(err => {
-                        console.log('Rejestracja ServiceWorker nie powiodła się: ', err);
-                    });
-            });
-        }
-    </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
